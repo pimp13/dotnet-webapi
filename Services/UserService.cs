@@ -9,10 +9,12 @@ namespace MyFirstApi.Services;
 public class UserService
 {
 	private readonly AppDbContext _context;
+	private readonly ILogger<UserService> _logger;
 
-	public UserService(AppDbContext context)
+	public UserService(AppDbContext context, ILogger<UserService> logger)
 	{
 		_context = context;
+		_logger = logger;
 	}
 
 	public async Task<IEnumerable<User>> GetAll()
@@ -38,6 +40,8 @@ public class UserService
 	}
 	public async Task<UserDto?> Update(uint id, UpdateUserDto dto)
 	{
+		_logger.LogInformation($"Updating user by #{id}...");
+
 		var user = await _context.Users.FindAsync(id);
 		if (user == null) return null;
 
