@@ -25,7 +25,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Product> GetById(int id)
+    public ActionResult<Product> GetById(uint id)
     {
         var product = _service.GetById(id);
         if (product == null) return NotFound(new { message = "Product is  not found" });
@@ -40,7 +40,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, Product product)
+    public IActionResult Update(uint id, Product product)
     {
         _logger.LogInformation($"Updating product by #{id}");
         var success = _service.Update(id, product);
@@ -50,7 +50,7 @@ public class ProductController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(uint id)
     {
         var success = _service.Delete(id);
         if (!success) return NotFound(new { message = "Product not found" });

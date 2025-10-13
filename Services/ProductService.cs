@@ -18,7 +18,7 @@ public class ProductService
 
     public IEnumerable<Product> GetAll() => _products;
 
-    public Product? GetById(int id) => _products.FirstOrDefault(p => p.Id == id);
+    public Product? GetById(uint id) => _products.FirstOrDefault(p => p.Id == id);
 
     public Product Add(Product product)
     {
@@ -27,7 +27,7 @@ public class ProductService
         return product;
     }
 
-    public bool Update(int id, Product bodyData)
+    public bool Update(uint id, Product bodyData)
     {
         var existing = GetById(id);
         if (existing == null) return false;
@@ -38,7 +38,7 @@ public class ProductService
         return true;
     }
 
-    public bool Delete(int id)
+    public bool Delete(uint id)
     {
         var product = GetById(id);
         if (product == null) return false;
