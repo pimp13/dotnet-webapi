@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyFirstApi.Data;
 using MyFirstApi.Dto;
+using MyFirstApi.Extensions;
 using MyFirstApi.Models;
 
 namespace MyFirstApi.Services;
@@ -19,7 +20,7 @@ public class UserService
 		return await _context.Users.ToListAsync();
 	}
 
-	public async Task<User?> GetById(int id)
+	public async Task<User?> GetById(uint id)
 	{
 		return await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
 	}
@@ -35,20 +36,21 @@ public class UserService
 		});
 		await _context.SaveChangesAsync();
 	}
-
-	public async Task<bool> Update(UpdateUserDto bodyData, int id)
+	public async Task<UserDto?> Update(uint id, UpdateUserDto dto)
 	{
 		var user = await _context.Users.FindAsync(id);
-		if (user == null) return false;
+		if (user == null) return null;
 
-		_context.Users.Update(new User
-		{
-			Email = bodyData.Email,
-			FirstName = bodyData.FirstName,
-			LastName = bodyData.LastName,
-			Password = bodyData.Password,
-		});
+		UserExtensions.ApplyUpdate(user, dto);
+
 		await _context.SaveChangesAsync();
-		return true;
+
+		return new UserDto
+		{
+			Id = user.Id,
+			FirstName = user.FirstName,
+			LastName = user.LastName,
+			Email = user.Email,
+		};
 	}
 }

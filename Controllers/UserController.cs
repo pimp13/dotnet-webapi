@@ -30,4 +30,11 @@ public class UserController : ControllerBase
     await _service.Create(bodyData);
     return CreatedAtAction(nameof(Create), new { message = "Created new user successfully" });
   }
+
+  [HttpPatch("{id}")]
+  public async Task<IActionResult> Update(UpdateUserDto bodyData, uint id)
+  {
+    var result = await _service.Update(id, bodyData);
+    return result == null ? NotFound() : Ok(result);
+  }
 }
