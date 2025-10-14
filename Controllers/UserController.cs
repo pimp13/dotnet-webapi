@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Dto;
+using MyFirstApi.Extensions;
 using MyFirstApi.Services;
 
 namespace MyFirstApi.Controllers;
@@ -20,9 +21,12 @@ public class UserController : ControllerBase
   public async Task<IActionResult> GetAll()
   {
     var users = await _service.GetAll();
-    if (users == null) return NotFound("Users is not found!");
-    return Ok(users);
+    if (users == null) return NotFound(ApiResponse<object>.Fail("Users not found"));
+    return Ok(ApiResponse<object>.Success(users));
   }
+
+  [HttpGet("multiply")]
+  public double Multiply(double a, double b) => a * b;
 
   [HttpPost]
   public async Task<IActionResult> Create(CreateUserDto bodyData)

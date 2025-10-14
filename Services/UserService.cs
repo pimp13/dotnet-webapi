@@ -38,6 +38,7 @@ public class UserService
 		});
 		await _context.SaveChangesAsync();
 	}
+
 	public async Task<UserDto?> Update(uint id, UpdateUserDto dto)
 	{
 		_logger.LogInformation($"Updating user by #{id}...");
