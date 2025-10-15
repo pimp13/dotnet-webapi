@@ -58,4 +58,17 @@ public class UserService
 			Email = user.Email,
 		};
 	}
+
+	public async Task<bool> Delete(uint id)
+	{
+		_logger.LogInformation($"Deleting user by id #{id}...");
+
+		var user = await _context.Users.FindAsync(id);
+		if (user == null) return false;
+
+		_context.Users.Remove(user);
+		await _context.SaveChangesAsync();
+
+		return true;
+	}
 }

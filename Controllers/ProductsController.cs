@@ -6,7 +6,7 @@ namespace MyFirstApi.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class ProductController : ControllerBase
 {
     private readonly ProductService _service;

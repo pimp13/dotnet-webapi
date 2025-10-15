@@ -136,3 +136,4 @@ C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\bin\Debug\net8.0\runtimes\browser
 C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\bin\Debug\net8.0\AutoMapper.dll
 C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\obj\Debug\net8.0\MyFirstApi.sourcelink.json
+C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.Versioning.dll
