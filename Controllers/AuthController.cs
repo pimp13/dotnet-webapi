@@ -1,4 +1,8 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MyFirstApi.Dto;
 using MyFirstApi.Services;
 
@@ -39,5 +43,19 @@ public class AuthController : ControllerBase
     });
 
     return Ok(token);
+  }
+
+  [Authorize]
+  [HttpGet("info")]
+  public IActionResult Info()
+  {
+     var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var email = User.FindFirst(ClaimTypes.Email)?.Value;
+
+        return Ok(new
+        {
+            message = "User is authenticated",
+            user = new { id = userId, email }
+        });
   }
 }
