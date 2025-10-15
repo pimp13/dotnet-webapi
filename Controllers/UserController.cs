@@ -45,7 +45,6 @@ public class UserController : ControllerBase
     return result == null ? NotFound() : Ok(result);
   }
 
-
   [HttpDelete("{id}")]
   public async Task<IActionResult> Delete(uint id)
   {

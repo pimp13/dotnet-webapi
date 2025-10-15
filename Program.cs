@@ -45,6 +45,7 @@ builder.Services.AddControllers(options =>
 
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<AuthService>();
 
 // init app
 var app = builder.Build();
