@@ -29,6 +29,15 @@ public class AuthController : ControllerBase
   public async Task<IActionResult> Login([FromBody] LoginDto bodyData)
   {
     var token = await _authService.Login(bodyData);
+
+    Response.Cookies.Append("_token", token, new CookieOptions
+    {
+      HttpOnly = true,
+      Secure = true,
+      SameSite = SameSiteMode.Strict,
+      Expires = DateTimeOffset.UtcNow.AddMinutes(1440)
+    });
+
     return Ok(token);
   }
 }
