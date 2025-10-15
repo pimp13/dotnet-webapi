@@ -7,7 +7,6 @@ using MyFirstApi.Middlewares;
 using MyFirstApi.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -55,7 +54,7 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 
 var issuer = builder.Configuration["Jwt:Issuer"];
-var key = builder.Configuration["Jwt:Key"] ?? "super_secret_key_12345";
+var key = builder.Configuration["Jwt:Key"];
 
 builder.Services.AddAuthentication(options =>
 {

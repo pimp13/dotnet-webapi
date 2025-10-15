@@ -65,7 +65,9 @@ public class AuthService
     {
       new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
       new Claim(JwtRegisteredClaimNames.Email, user.Email),
-      new Claim("FullName", $"{user.FirstName} {user.LastName}")
+      new Claim("FullName", $"{user.FirstName} {user.LastName}"),
+      new Claim("role", user.Role.ToString()),
+      new Claim("isActive", user.IsActive.ToString())
     };
 
     var token = new JwtSecurityToken(
@@ -78,6 +80,5 @@ public class AuthService
 
     return new JwtSecurityTokenHandler().WriteToken(token);
   }
-
 
 }

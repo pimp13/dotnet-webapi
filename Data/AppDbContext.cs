@@ -14,5 +14,9 @@ public class AppDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+
+        modelBuilder.Entity<User>().HasIndex(u => u.IsActive);
+        modelBuilder.Entity<User>().HasIndex(u => u.IsSupperAdmin);
+        modelBuilder.Entity<User>().HasIndex(u => u.Role);
     }
 }
