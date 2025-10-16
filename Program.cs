@@ -9,6 +9,7 @@ using MyFirstApi.Data;
 using MyFirstApi.Extensions;
 using MyFirstApi.Middlewares;
 using MyFirstApi.Services;
+using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,7 +39,24 @@ builder.Services.AddApiVersioning(options =>
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
+
+    // تعریف JWT
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "توکن JWT را وارد کنید (با پیشوند 'Bearer ')",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    // 👇 فقط در صورتی که [Authorize] باشد
+    options.OperationFilter<AuthorizeCheckOperationFilter>();
+});
+
 
 builder.Services.AddControllers(options =>
 {
