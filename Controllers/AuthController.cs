@@ -1,8 +1,6 @@
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using MyFirstApi.Dto;
 using MyFirstApi.Services;
 
@@ -15,10 +13,12 @@ namespace MyFirstApi.Controllers;
 public class AuthController : ControllerBase
 {
   private readonly AuthService _authService;
+  private readonly ILogger<AuthController> _logger;
 
-  public AuthController(AuthService service)
+  public AuthController(AuthService service, ILogger<AuthController> logger)
   {
     _authService = service;
+    _logger = logger;
   }
 
   [HttpPost("register")]
@@ -45,18 +45,18 @@ public class AuthController : ControllerBase
     return Ok(token);
   }
 
-  [Authorize]
+  [Authorize(Policy = "ActiveUserOnly")]
   [HttpGet("info")]
-  public IActionResult Info()
+  public async Task<IActionResult> Info()
   {
-     var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        var email = User.FindFirst(ClaimTypes.Email)?.Value;
+    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    var isSupperAdmin = User.FindFirst("isSuperAdmin")?.Value;
+    var user = await _authService.FindUserById(Convert.ToUInt32(userId));
 
-
-
-        return Ok(new
-        {
-            user = new { id = userId, email }
-        });
+    return Ok(new
+    {
+      user,
+      isSupperAdmin
+    });
   }
 }

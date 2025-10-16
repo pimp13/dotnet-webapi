@@ -51,6 +51,12 @@ public class AuthService
     return GenerateJwtToken(user);
   }
 
+  public async Task<User?> FindUserById(uint id)
+  {
+    var user = await _context.Users.FindAsync(id);
+    return user;
+  }
+
   private string GenerateJwtToken(User user)
   {
     var jwtKey = _config["Jwt:Key"];
@@ -65,9 +71,10 @@ public class AuthService
     {
       new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
       new Claim(JwtRegisteredClaimNames.Email, user.Email),
-      new Claim("FullName", $"{user.FirstName} {user.LastName}"),
+      new Claim("fullName", $"{user.FirstName} {user.LastName}"),
       new Claim("role", user.Role.ToString()),
-      new Claim("isActive", user.IsActive.ToString())
+      new Claim("isActive", user.IsActive ? "True" : "False"),
+      new Claim("isSuperAdmin", user.IsSupperAdmin ? "True" : "False")
     };
 
     var token = new JwtSecurityToken(

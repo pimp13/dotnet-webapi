@@ -1,15 +1,14 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+
 using MyFirstApi.Data;
 using MyFirstApi.Extensions;
 using MyFirstApi.Middlewares;
 using MyFirstApi.Services;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -95,15 +94,26 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = false,
         ValidateAudience = false,
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key!))
     };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ActiveUserOnly", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.RequireClaim("isActive", "True");
+    });
 });
 
 
 // init app
 var app = builder.Build();
 
+// Middlewares
 app.UseMiddleware<ResponseWrapperMiddleware>();
+app.UseMiddleware<AdminMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
