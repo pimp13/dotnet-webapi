@@ -11,5 +11,4 @@ public class Category : BaseModel
     [MaxLength(190)]
     public required string Slug { get; set; }
 
-    
 }
