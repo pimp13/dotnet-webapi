@@ -1,5 +1,4 @@
 using System.Security.Claims;
-using AutoMapper.Configuration.Annotations;
 using BlogModule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +15,15 @@ public class AuthController : ControllerBase
 {
   private readonly AuthService _authService;
   private readonly ILogger<AuthController> _logger;
+  private readonly IConfiguration _config;
 
-  public AuthController(AuthService service, ILogger<AuthController> logger)
+  private const string TokenCookieName = "_token";
+
+  public AuthController(AuthService service, ILogger<AuthController> logger, IConfiguration config)
   {
     _authService = service;
     _logger = logger;
+    _config = config;
   }
 
   [HttpPost("register")]
@@ -36,16 +39,26 @@ public class AuthController : ControllerBase
   {
     var token = await _authService.Login(bodyData);
 
-    Response.Cookies.Append("_token", token, new CookieOptions
+    Response.Cookies.Append(TokenCookieName, token, new CookieOptions
     {
       HttpOnly = true,
       Secure = true,
       SameSite = SameSiteMode.Strict,
-      Expires = DateTimeOffset.UtcNow.AddMinutes(1440)
+      Expires = DateTimeOffset.UtcNow.AddMinutes(double.Parse(_config["Jwt:DurationInMinutes"]!))
     });
 
     return Ok(token);
   }
+
+  [HttpPost("logout")]
+  public IActionResult Logout()
+  {
+    Response.Cookies.Delete(TokenCookieName);
+
+    HttpContext.Items["message"] = "Your logout is successfully!";
+    return Ok("");
+  }
+
 
   [Authorize(Policy = "ActiveUserOnly")]
   [HttpGet("info")]
