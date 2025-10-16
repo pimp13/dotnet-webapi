@@ -31,4 +31,10 @@ public class User : BaseModel
 
     [Required]
     public bool IsSupperAdmin { get; set; } = false;
+
+
+    public string FullName()
+    {
+        return $"{FirstName} {LastName}";
+    }
 }

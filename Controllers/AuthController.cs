@@ -1,4 +1,6 @@
 using System.Security.Claims;
+using AutoMapper.Configuration.Annotations;
+using BlogModule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Dto;
@@ -52,6 +54,9 @@ public class AuthController : ControllerBase
     var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
     var isSupperAdmin = User.FindFirst("isSuperAdmin")?.Value;
     var user = await _authService.FindUserById(Convert.ToUInt32(userId));
+
+    var lib = new ClassLibBlog();
+    lib.SayHello(user?.FullName() ?? "Unknow");
 
     return Ok(new
     {
