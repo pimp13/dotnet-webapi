@@ -11,4 +11,10 @@ public class Category : BaseModel
     [MaxLength(190)]
     public required string Slug { get; set; }
 
+    public string? Description { get; set; } = null!;
+
+    public uint? ParentId { get; set; }
+
+    public Category? Parent { get; set; }
+    public ICollection<Category> Children { get; set; } = new List<Category>();
 }
