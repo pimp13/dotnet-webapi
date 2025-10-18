@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Dto;
+using MyFirstApi.Extensions;
+using MyFirstApi.Models;
 using MyFirstApi.Services;
 
 namespace MyFirstApi.Controllers;
@@ -9,24 +11,43 @@ namespace MyFirstApi.Controllers;
 [ApiController]
 public class CategoryController : ControllerBase
 {
-    private readonly CategoryService _categoryService;
+  private readonly CategoryService _categoryService;
+  private readonly ILogger<CategoryService> _logger;
 
-    public CategoryController(CategoryService categoryService)
-    {
-        _categoryService = categoryService;
-    }
+  public CategoryController(CategoryService categoryService, ILogger<CategoryService> logger)
+  {
+    _categoryService = categoryService;
+    _logger = logger;
+  }
 
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var resp = await _categoryService.GetAll();
-        return (resp == null) ? NotFound("Category is not found") : Ok(resp);
-    }
+  [HttpGet]
+  public async Task<IActionResult> GetAll()
+  {
+    var resp = await _categoryService.GetAll();
+    return (resp == null) ?
+      NotFound(ApiResponse<IEnumerable<Category>>.Fail("category is not found")) :
+      Ok(ApiResponse<IEnumerable<Category>>.Success(resp));
+  }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateCategoryDto bodyData)
-    {
-        var (resp, msg) = await _categoryService.Create(bodyData);
-        return Ok((resp, msg));
-    }
+  [HttpPost]
+  public async Task<IActionResult> Create([FromBody] CreateCategoryDto bodyData)
+  {
+    var result = await _categoryService.Create(bodyData);
+    return result.Ok ?
+      CreatedAtAction(nameof(FindById), result) :
+      Problem(
+        detail: result.Message,
+        statusCode: StatusCodes.Status500InternalServerError,
+        title: "Create a new category failed!"
+      );
+  }
+
+  [HttpGet("{id}")]
+  public async Task<ActionResult<ApiResponse<Category>>> FindById(uint id)
+  {
+    var data = await _categoryService.FindById(id);
+    return (data == null) ?
+       NotFound(ApiResponse<Category>.Fail($"category by id #{id} not found")) :
+       Ok(ApiResponse<Category>.Success(data));
+  }
 }

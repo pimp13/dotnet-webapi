@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace MyFirstApi.Models;
 
@@ -15,6 +16,8 @@ public class Category : BaseModel
 
     public uint? ParentId { get; set; }
 
+    [JsonIgnore]
     public Category? Parent { get; set; }
+
     public ICollection<Category> Children { get; set; } = new List<Category>();
 }

@@ -64,6 +64,8 @@ builder.Services.AddControllers(options =>
 }).AddJsonOptions(options =>
    {
        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+       options.JsonSerializerOptions.ReferenceHandler = null;
+       options.JsonSerializerOptions.WriteIndented = true;
    });
 
 builder.Services.AddSingleton<ProductService>();
@@ -131,7 +133,7 @@ builder.Services.AddAuthorization(options =>
 var app = builder.Build();
 
 // Middlewares
-app.UseMiddleware<ResponseWrapperMiddleware>();
+// app.UseMiddleware<ResponseWrapperMiddleware>();
 app.UseMiddleware<AdminMiddleware>();
 
 // Configure the HTTP request pipeline.

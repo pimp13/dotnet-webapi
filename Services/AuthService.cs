@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyFirstApi.Data;
 using MyFirstApi.Dto;
+using MyFirstApi.Extensions;
 using MyFirstApi.Models;
 
 
@@ -22,33 +23,47 @@ public class AuthService
     _config = config;
   }
 
-  public async Task<User> Register(RegisterDto bodyData)
+  public async Task<ApiResponse<User>> Register(RegisterDto bodyData)
   {
-    if (await _context.Users.AnyAsync(u => u.Email == bodyData.Email))
-      throw new Exception("Email already exists!");
-
-    var user = new User
+    try
     {
-      FirstName = bodyData.FirstName,
-      LastName = bodyData.LastName,
-      Email = bodyData.Email,
-      Password = BCrypt.Net.BCrypt.HashPassword(bodyData.Password)
-    };
+      if (await _context.Users.AnyAsync(u => u.Email == bodyData.Email))
+        throw new Exception("Email already exists!");
 
-    _context.Users.Add(user);
-    await _context.SaveChangesAsync();
+      var user = new User
+      {
+        FirstName = bodyData.FirstName,
+        LastName = bodyData.LastName,
+        Email = bodyData.Email,
+        Password = BCrypt.Net.BCrypt.HashPassword(bodyData.Password)
+      };
 
-    return user;
+      _context.Users.Add(user);
+      await _context.SaveChangesAsync();
+
+      return ApiResponse<User>.Success(user, "register a new user successfully!");
+    }
+    catch (Exception e)
+    {
+      return ApiResponse<User>.Fail($"failed to register user {e.Message}");
+    }
   }
 
-  public async Task<string> Login(LoginDto bodyData)
+  public async Task<ApiResponse<string>> Login(LoginDto bodyData)
   {
-    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == bodyData.Email);
+    try
+    {
+      var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == bodyData.Email);
 
-    if (user == null || !BCrypt.Net.BCrypt.Verify(bodyData.Password, user.Password))
-      throw new Exception("Invalid email or password");
+      if (user == null || !BCrypt.Net.BCrypt.Verify(bodyData.Password, user.Password))
+        throw new Exception("Invalid email or password");
 
-    return GenerateJwtToken(user);
+      return ApiResponse<string>.Success(GenerateJwtToken(user), "login user is successfully");
+    }
+    catch (Exception e)
+    {
+      return ApiResponse<string>.Fail($"failed to login user: {e.Message}");
+    }
   }
 
   public async Task<User?> FindUserById(uint id)

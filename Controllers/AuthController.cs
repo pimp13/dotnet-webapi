@@ -3,6 +3,7 @@ using BlogModule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Dto;
+using MyFirstApi.Extensions;
 using MyFirstApi.Services;
 
 namespace MyFirstApi.Controllers;
@@ -29,25 +30,28 @@ public class AuthController : ControllerBase
   [HttpPost("register")]
   public async Task<IActionResult> Register([FromBody] RegisterDto bodyData)
   {
-    var user = await _authService.Register(bodyData);
-    return Ok(user);
+    var response = await _authService.Register(bodyData);
+    return response.Ok ? Ok(response) : BadRequest(response);
   }
 
 
   [HttpPost("login")]
   public async Task<IActionResult> Login([FromBody] LoginDto bodyData)
   {
-    var token = await _authService.Login(bodyData);
+    var response = await _authService.Login(bodyData);
 
-    Response.Cookies.Append(TokenCookieName, token, new CookieOptions
+    if (response.Ok && !string.IsNullOrEmpty(response.Data))
     {
-      HttpOnly = true,
-      Secure = true,
-      SameSite = SameSiteMode.Strict,
-      Expires = DateTimeOffset.UtcNow.AddMinutes(double.Parse(_config["Jwt:DurationInMinutes"]!))
-    });
+      Response.Cookies.Append(TokenCookieName, response.Data, new CookieOptions
+      {
+        HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.Strict,
+        Expires = DateTimeOffset.UtcNow.AddMinutes(double.Parse(_config["Jwt:DurationInMinutes"]!))
+      });
+    }
 
-    return Ok(token);
+    return response.Ok ? Ok(response) : BadRequest(response);
   }
 
   [HttpPost("logout")]
@@ -71,10 +75,10 @@ public class AuthController : ControllerBase
     var lib = new ClassLibBlog();
     lib.SayHello(user?.FullName() ?? "Unknow");
 
-    return Ok(new
+    return Ok(ApiResponse<object>.Success(new
     {
       user,
       isSupperAdmin
-    });
+    }));
   }
 }
