@@ -69,6 +69,7 @@ builder.Services.AddControllers(options =>
 builder.Services.AddSingleton<ProductService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<CategoryService>();
 
 var issuer = builder.Configuration["Jwt:Issuer"];
 var key = builder.Configuration["Jwt:Key"];

@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "/home/pouya/dev/csharp_projects/dotnet-webapi/MyFirstApi.csproj": {}
+    "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\MyFirstApi.csproj": {}
   },
   "projects": {
-    "/home/pouya/dev/csharp_projects/dotnet-webapi/MyFirstApi.csproj": {
+    "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\MyFirstApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/pouya/dev/csharp_projects/dotnet-webapi/MyFirstApi.csproj",
+        "projectUniqueName": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\MyFirstApi.csproj",
         "projectName": "MyFirstApi",
-        "projectPath": "/home/pouya/dev/csharp_projects/dotnet-webapi/MyFirstApi.csproj",
-        "packagesPath": "/home/pouya/.nuget/packages/",
-        "outputPath": "/home/pouya/dev/csharp_projects/dotnet-webapi/obj/",
+        "projectPath": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\MyFirstApi.csproj",
+        "packagesPath": "C:\\Users\\mehdi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "/home/pouya/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\mehdi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -32,6 +36,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -112,7 +121,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.121/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.414/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
