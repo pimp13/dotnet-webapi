@@ -15,3 +15,14 @@ public class CreateCategoryDto
     public uint? ParentId { get; set; } = null!;
 
 }
+
+public class UpdateCategoryDto
+{
+    public string Name { get; set; } = default!;
+
+    public string? Slug { get; set; } = default!;
+
+    public string? Description { get; set; } = default!;
+
+    public uint? ParentId { get; set; } = default!;
+}

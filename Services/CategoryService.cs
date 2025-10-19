@@ -66,6 +66,32 @@ public class CategoryService
     return data;
   }
 
+  public async Task<ApiResponse<object?>> Update(UpdateCategoryDto bodyData, uint id)
+  {
+    try
+    {
+      var existingCategory = await _context.Categories.AnyAsync(c => c.Id == id);
+      if (!existingCategory)
+        throw new Exception($"category by id #{id} not found!");
+
+      var category = new Category
+      {
+        Name = bodyData.Name,
+        Slug = bodyData.Slug,
+        ParentId = bodyData.ParentId,
+        Description = bodyData.Description
+      };
+      _context.Categories.Update(category);
+      await _context.SaveChangesAsync();
+
+      return ApiResponse<object?>.Success(category);
+    }
+    catch (Exception e)
+    {
+      return ApiResponse<object?>.Fail($"failed to update: {e.Message}");
+    }
+  }
+
   private async Task<string> generateUniqueSlug(string input, uint? excludeCategoryId = null)
   {
     if (string.IsNullOrWhiteSpace(input))

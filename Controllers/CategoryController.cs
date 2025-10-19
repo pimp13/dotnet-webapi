@@ -50,4 +50,11 @@ public class CategoryController : ControllerBase
        NotFound(ApiResponse<Category>.Fail($"category by id #{id} not found")) :
        Ok(ApiResponse<Category>.Success(data));
   }
+
+  [HttpPatch("{id}")]
+  public async Task<IActionResult> Update(uint id, [FromBody] UpdateCategoryDto bodyData)
+  {
+    var resp = await _categoryService.Update(bodyData, id);
+    return resp.Ok ? Ok(resp) : BadRequest(resp);
+  }
 }
