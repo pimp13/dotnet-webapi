@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
 
     public DbSet<User> Users => Set<User>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<Post> Posts => Set<Post>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,6 +23,11 @@ public class AppDbContext : DbContext
             entity.HasIndex(u => u.IsActive);
             entity.HasIndex(u => u.IsSupperAdmin);
             entity.HasIndex(u => u.Role);
+
+            entity.HasMany(u => u.Posts)
+                .WithOne(p => p.Author)
+                .HasForeignKey(p => p.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
         });
 
 
@@ -31,11 +37,24 @@ public class AppDbContext : DbContext
             entity.HasIndex(c => c.Slug).IsUnique(true);
 
             entity.HasOne(c => c.Parent)
-            .WithMany(c => c.Children)
-            .HasForeignKey(c => c.ParentId)
-            .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(c => c.Children)
+                .HasForeignKey(c => c.ParentId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             entity.Property(c => c.ParentId).IsRequired(false);
+
+            entity.HasMany(c => c.Posts)
+                .WithOne(p => p.Category)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+
+
+        // Post entity config
+        modelBuilder.Entity<Post>(entity =>
+        {
+            entity.HasIndex(p => p.Slug).IsUnique(true);
+            entity.HasIndex(p => p.Title);
         });
 
     }

@@ -471,3 +471,4 @@ C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\obj\Debug\net8.0\refint\MyFirstAp
 C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\obj\Debug\net8.0\MyFirstApi.pdb
 C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\obj\Debug\net8.0\MyFirstApi.genruntimeconfig.cache
 C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\obj\Debug\net8.0\ref\MyFirstApi.dll
+C:\Users\mehdi\Desktop\puma\c#-apps\MyFirstApi\bin\Debug\net8.0\MyFirstApi.staticwebassets.runtime.json

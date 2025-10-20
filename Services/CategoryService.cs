@@ -66,29 +66,54 @@ public class CategoryService
     return data;
   }
 
-  public async Task<ApiResponse<object?>> Update(UpdateCategoryDto bodyData, uint id)
+  public async Task<ApiResponse<Category>> Update(UpdateCategoryDto bodyData, uint id)
   {
     try
     {
-      var existingCategory = await _context.Categories.AnyAsync(c => c.Id == id);
-      if (!existingCategory)
-        throw new Exception($"category by id #{id} not found!");
+      var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == id);
+      if (category == null)
+        return ApiResponse<Category>.Fail($"Category with id {id} not found");
 
-      var category = new Category
+      // فقط فیلدهایی که مقدار دارند رو تغییر بده
+      if (!string.IsNullOrWhiteSpace(bodyData.Name))
       {
-        Name = bodyData.Name,
-        Slug = bodyData.Slug,
-        ParentId = bodyData.ParentId,
-        Description = bodyData.Description
-      };
+        // اگر اسم جدید تکراری است => خطا بده
+        var nameExists = await _context.Categories.AnyAsync(c => c.Name == bodyData.Name && c.Id != id);
+        if (nameExists)
+          throw new Exception($"Category name '{bodyData.Name}' already exists");
+
+        category.Name = bodyData.Name;
+
+        // اگر Slug هم null بود از Name تولید کن
+        if (string.IsNullOrWhiteSpace(bodyData.Slug))
+          category.Slug = await generateUniqueSlug(bodyData.Name);
+      }
+
+      if (!string.IsNullOrWhiteSpace(bodyData.Slug))
+      {
+        category.Slug = await generateUniqueSlug(bodyData.Slug);
+      }
+
+      if (!string.IsNullOrWhiteSpace(bodyData.Description))
+      {
+        category.Description = bodyData.Description;
+      }
+
+      if (bodyData.ParentId.HasValue)
+      {
+        category.ParentId = bodyData.ParentId;
+      }
+
+      using var transaction = await _context.Database.BeginTransactionAsync();
       _context.Categories.Update(category);
       await _context.SaveChangesAsync();
+      await transaction.CommitAsync();
 
-      return ApiResponse<object?>.Success(category);
+      return ApiResponse<Category>.Success(category, "Category updated successfully!");
     }
     catch (Exception e)
     {
-      return ApiResponse<object?>.Fail($"failed to update: {e.Message}");
+      return ApiResponse<Category>.Fail($"update category failed: {e.Message}");
     }
   }
 

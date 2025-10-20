@@ -4,12 +4,13 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 using MyFirstApi.Data;
 using MyFirstApi.Extensions;
 using MyFirstApi.Middlewares;
 using MyFirstApi.Services;
-using Microsoft.OpenApi.Models;
+using MyFirstApi.Services.Admin;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -43,7 +44,6 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-    // تعریف JWT
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -53,7 +53,6 @@ builder.Services.AddSwaggerGen(options =>
         Scheme = "Bearer"
     });
 
-    // 👇 فقط در صورتی که [Authorize] باشد
     options.OperationFilter<AuthorizeCheckOperationFilter>();
 });
 
@@ -72,6 +71,9 @@ builder.Services.AddSingleton<ProductService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<CategoryService>();
+builder.Services.AddScoped<HomeService>();
+builder.Services.AddScoped<PostService>();
+builder.Services.AddScoped<FileUploderService>();
 
 var issuer = builder.Configuration["Jwt:Issuer"];
 var key = builder.Configuration["Jwt:Key"];
@@ -90,7 +92,6 @@ builder.Services.AddAuthentication(options =>
     {
         OnMessageReceived = context =>
         {
-            // 1️⃣ ابتدا بررسی در Header
             var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
             if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
             {
@@ -98,7 +99,6 @@ builder.Services.AddAuthentication(options =>
             }
             else
             {
-                // 2️⃣ در غیر اینصورت از Cookie بخون
                 var cookieToken = context.Request.Cookies["_token"];
                 if (!string.IsNullOrEmpty(cookieToken))
                 {
@@ -134,6 +134,7 @@ var app = builder.Build();
 
 // Middlewares
 // app.UseMiddleware<ResponseWrapperMiddleware>();
+app.UseStaticFiles();
 app.UseMiddleware<AdminMiddleware>();
 
 // Configure the HTTP request pipeline.

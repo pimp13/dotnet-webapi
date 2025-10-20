@@ -20,4 +20,6 @@ public class Category : BaseModel
     public Category? Parent { get; set; }
 
     public ICollection<Category> Children { get; set; } = new List<Category>();
+
+    public ICollection<Post> Posts { get; set; } = new List<Post>();
 }

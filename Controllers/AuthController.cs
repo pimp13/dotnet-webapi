@@ -9,6 +9,7 @@ using MyFirstApi.Services;
 namespace MyFirstApi.Controllers;
 
 
+[Tags("[Auth] User")]
 [ApiController]
 [Route("v1/[controller]")]
 [ApiVersion("1.0")]
@@ -59,8 +60,7 @@ public class AuthController : ControllerBase
   {
     Response.Cookies.Delete(TokenCookieName);
 
-    HttpContext.Items["message"] = "Your logout is successfully!";
-    return Ok("");
+    return Ok(ApiResponse<object>.Success(null, "Your logout is sucessfully!"));
   }
 
 
