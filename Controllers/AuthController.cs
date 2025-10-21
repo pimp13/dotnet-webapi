@@ -73,7 +73,7 @@ public class AuthController : ControllerBase
     var user = await _authService.FindUserById(Convert.ToUInt32(userId));
 
     var lib = new ClassLibBlog();
-    lib.SayHello(user?.FullName() ?? "Unknow");
+    lib.SayHello(user?.FirstName ?? "Unknow");
 
     return Ok(ApiResponse<object>.Success(new
     {

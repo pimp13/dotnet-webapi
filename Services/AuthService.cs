@@ -66,13 +66,32 @@ public class AuthService
     }
   }
 
-  public async Task<User?> FindUserById(uint id)
+  public async Task<UserResponseDto?> FindUserById(uint id)
   {
     var user = await _context.Users
       .Include(u => u.Posts)
       .ThenInclude(u => u.Category)
-      .ThenInclude(u => u.Children)
-      .FirstOrDefaultAsync(c => c.Id == id);
+      .Select(u => new UserResponseDto
+      {
+        Id = u.Id,
+        FirstName = u.FirstName,
+        LastName = u.LastName,
+        Email = u.Email,
+        IsActive = u.IsActive,
+        IsSupperAdmin = u.IsSupperAdmin,
+        Posts = u.Posts.Select(p => new PostResponseDto
+        {
+          Content = p.Content,
+          ImageUrl = p.ImageUrl,
+          Slug = p.Slug,
+          Author = p.Author,
+          Title = p.Title,
+          Category = p.Category,
+          FullImageUrl = p.FullImageUrl,
+          Summary = p.Summary
+        }),
+      })
+      .FirstOrDefaultAsync(e => e.Id == id);
     return user;
   }
 

@@ -35,6 +35,8 @@ public class UserDto
 
 public class UserResponseDto
 {
+    public uint Id { get; set; }
+
     public string FirstName { get; set; } = default!;
 
     public string LastName { get; set; } = default!;

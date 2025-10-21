@@ -24,6 +24,7 @@ public class UserService
 			.ThenInclude(x => x.Category)
 			.Select(u => new UserResponseDto
 			{
+				Id = u.Id,
 				FirstName = u.FirstName,
 				LastName = u.LastName,
 				Email = u.Email,
