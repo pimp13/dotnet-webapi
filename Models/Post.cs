@@ -21,10 +21,12 @@ public class Post : BaseModel
 
     public required uint CategoryId { get; set; }
 
+    [ForeignKey(nameof(CategoryId))]
     public Category Category { get; set; } = default!;
 
     public required uint UserId { get; set; }
 
+    [ForeignKey(nameof(UserId))]
     public User Author { get; set; } = default!;
 
 

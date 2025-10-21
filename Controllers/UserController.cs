@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Dto;
 using MyFirstApi.Extensions;
+using MyFirstApi.Models;
 using MyFirstApi.Services;
 
 namespace MyFirstApi.Controllers;
@@ -19,12 +20,12 @@ public class UserController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<IActionResult> GetAll()
+  public async Task<ActionResult<ApiResponse<IEnumerable<User>>>> GetAll()
   {
     var users = await _service.GetAll();
-    if (users == null) return NotFound("NotFound Data");
-    HttpContext.Items["message"] = "Find All Users Is Successfully";
-    return Ok(users);
+    return users == null ?
+      NotFound(ApiResponse<IEnumerable<User>>.Fail("User not found")) :
+      Ok(ApiResponse<IEnumerable<User>>.Success(users));
   }
 
   [HttpGet("multiply")]

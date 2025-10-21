@@ -19,7 +19,12 @@ public class UserService
 
 	public async Task<IEnumerable<User>> GetAll()
 	{
-		return await _context.Users.ToListAsync();
+		var users = await _context.Users
+			.Include(u => u.Posts)
+			.OrderByDescending(u => u.CreatedAt)
+			.ToListAsync();
+
+		return users;
 	}
 
 	public async Task<User?> GetById(uint id)

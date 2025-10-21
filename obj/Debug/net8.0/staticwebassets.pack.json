@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\914675a0-a358-49ba-9153-e4d0cea80dd3.png",
+      "PackagePath": "staticwebassets\\uploads\\posts\\914675a0-a358-49ba-9153-e4d0cea80dd3.png"
+    },
+    {
       "Id": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\d1bdbeb0-c232-4167-8349-696d2d6428ff.png",
       "PackagePath": "staticwebassets\\uploads\\posts\\d1bdbeb0-c232-4167-8349-696d2d6428ff.png"
     },

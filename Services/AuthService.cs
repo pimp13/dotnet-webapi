@@ -68,7 +68,9 @@ public class AuthService
 
   public async Task<User?> FindUserById(uint id)
   {
-    var user = await _context.Users.FindAsync(id);
+    var user = await _context.Users
+      .Include(u => u.Posts)
+      .FirstOrDefaultAsync(c => c.Id == id);
     return user;
   }
 

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "3cekLk1hjIfBYEUsrf+BW3PNZMG1WOvCptrZoXBgUtw=",
+  "Hash": "0taWX8FEziDX5QCNG9OyhC6KmfR/PJRwcXodJxA4/O0=",
   "Source": "MyFirstApi",
   "BasePath": "_content/MyFirstApi",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\914675a0-a358-49ba-9153-e4d0cea80dd3.png",
+      "SourceId": "MyFirstApi",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\",
+      "BasePath": "_content/MyFirstApi",
+      "RelativePath": "uploads/posts/914675a0-a358-49ba-9153-e4d0cea80dd3.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\posts\\914675a0-a358-49ba-9153-e4d0cea80dd3.png"
+    },
     {
       "Identity": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\d1bdbeb0-c232-4167-8349-696d2d6428ff.png",
       "SourceId": "MyFirstApi",

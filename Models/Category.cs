@@ -21,5 +21,6 @@ public class Category : BaseModel
 
     public ICollection<Category> Children { get; set; } = new List<Category>();
 
+    [JsonIgnore]
     public ICollection<Post> Posts { get; set; } = new List<Post>();
 }

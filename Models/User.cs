@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using MyFirstApi.Models.Enums;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json.Serialization;
 
 namespace MyFirstApi.Models;
 
@@ -32,6 +33,7 @@ public class User : BaseModel
     [Required]
     public bool IsSupperAdmin { get; set; } = false;
 
+    [InverseProperty(nameof(Post.Author)), JsonIgnore]
     public ICollection<Post> Posts { get; set; } = new List<Post>();
 
     public string FullName()

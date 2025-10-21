@@ -63,8 +63,9 @@ builder.Services.AddControllers(options =>
 }).AddJsonOptions(options =>
    {
        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-       options.JsonSerializerOptions.ReferenceHandler = null;
        options.JsonSerializerOptions.WriteIndented = true;
+       options.JsonSerializerOptions.ReferenceHandler = null;
+       //    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
    });
 
 builder.Services.AddSingleton<ProductService>();
