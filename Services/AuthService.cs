@@ -70,6 +70,8 @@ public class AuthService
   {
     var user = await _context.Users
       .Include(u => u.Posts)
+      .ThenInclude(u => u.Category)
+      .ThenInclude(u => u.Children)
       .FirstOrDefaultAsync(c => c.Id == id);
     return user;
   }

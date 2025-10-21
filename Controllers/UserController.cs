@@ -20,12 +20,12 @@ public class UserController : ControllerBase
   }
 
   [HttpGet]
-  public async Task<ActionResult<ApiResponse<IEnumerable<User>>>> GetAll()
+  public async Task<ActionResult<ApiResponse<IEnumerable<UserResponseDto>>>> GetAll()
   {
     var users = await _service.GetAll();
     return users == null ?
-      NotFound(ApiResponse<IEnumerable<User>>.Fail("User not found")) :
-      Ok(ApiResponse<IEnumerable<User>>.Success(users));
+      NotFound(ApiResponse<IEnumerable<UserResponseDto>>.Fail("User not found")) :
+      Ok(ApiResponse<IEnumerable<UserResponseDto>>.Success(users));
   }
 
   [HttpGet("multiply")]

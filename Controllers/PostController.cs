@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Dto;
+using MyFirstApi.Extensions;
+using MyFirstApi.Models;
 using MyFirstApi.Services;
 
 namespace MyFirstApi.Controllers;
@@ -18,10 +20,12 @@ public class PostController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<ActionResult<ApiResponse<Post>>> GetAll()
     {
         var resp = await _postService.GetAll();
-        return resp.Ok ? Ok(resp) : NotFound(resp);
+        return resp.Ok ?
+            Ok(resp) :
+            NotFound(resp);
     }
 
     [Authorize(Policy = "ActiveUserOnly")]

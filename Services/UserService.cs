@@ -17,11 +17,30 @@ public class UserService
 		_logger = logger;
 	}
 
-	public async Task<IEnumerable<User>> GetAll()
+	public async Task<IEnumerable<UserResponseDto>> GetAll()
 	{
 		var users = await _context.Users
 			.Include(u => u.Posts)
-			.OrderByDescending(u => u.CreatedAt)
+			.ThenInclude(x => x.Category)
+			.Select(u => new UserResponseDto
+			{
+				FirstName = u.FirstName,
+				LastName = u.LastName,
+				Email = u.Email,
+				IsActive = u.IsActive,
+				IsSupperAdmin = u.IsSupperAdmin,
+				Posts = u.Posts.Select(p => new PostResponseDto
+				{
+					Content = p.Content,
+					ImageUrl = p.ImageUrl,
+					Slug = p.Slug,
+					Author = p.Author,
+					Title = p.Title,
+					Category = p.Category,
+					FullImageUrl = p.FullImageUrl,
+					Summary = p.Summary
+				}),
+			})
 			.ToListAsync();
 
 		return users;

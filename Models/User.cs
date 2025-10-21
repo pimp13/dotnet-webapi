@@ -33,8 +33,7 @@ public class User : BaseModel
     [Required]
     public bool IsSupperAdmin { get; set; } = false;
 
-    [InverseProperty(nameof(Post.Author)), JsonIgnore]
-    public ICollection<Post> Posts { get; set; } = new List<Post>();
+    public List<Post> Posts { get; set; } = new List<Post>();
 
     public string FullName()
     {

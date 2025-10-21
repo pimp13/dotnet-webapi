@@ -11,6 +11,7 @@ using MyFirstApi.Extensions;
 using MyFirstApi.Middlewares;
 using MyFirstApi.Services;
 using MyFirstApi.Services.Admin;
+using System.Text.Json.Serialization;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,8 +65,10 @@ builder.Services.AddControllers(options =>
    {
        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
        options.JsonSerializerOptions.WriteIndented = true;
-       options.JsonSerializerOptions.ReferenceHandler = null;
-       //    options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
+
+       //    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+       //    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+       //    options.JsonSerializerOptions.WriteIndented = true;
    });
 
 builder.Services.AddSingleton<ProductService>();
