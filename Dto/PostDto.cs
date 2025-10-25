@@ -23,8 +23,29 @@ public class CreatePostDto
 }
 
 
+public class UpdatePostDto
+{
+  [MaxLength(195)]
+  public string? Title { get; set; }
+
+  public string? Summary { get; set; } = default!;
+
+  public string? Slug { get; set; } = default!;
+
+  public string? Content { get; set; }
+
+  public IFormFile? Image { get; set; }
+
+  public uint? CategoryId { get; set; }
+
+  public uint? UserId { get; set; }
+}
+
+
 public class PostResponseDto
 {
+  public uint Id { get; set; }
+
   public required string Title { get; set; }
 
   public string Summary { get; set; } = default!;
@@ -40,4 +61,6 @@ public class PostResponseDto
   public User Author { get; set; } = default!;
 
   public string? FullImageUrl { get; set; }
+
+  public DateTime CreatedAt { get; set; }
 }

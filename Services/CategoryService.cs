@@ -37,7 +37,9 @@ public class CategoryService
       var existingCategoryByName = await _context.Categories.AnyAsync(c => c.Name == bodyData.Name);
       if (existingCategoryByName) throw new Exception($"Category by name {bodyData.Name} is exists");
 
-      var slug = (bodyData.Slug == null) ? await generateUniqueSlug(bodyData.Name) : await generateUniqueSlug(bodyData.Slug);
+      var slug = (bodyData.Slug == null) ?
+        await generateUniqueSlug(bodyData.Name) :
+        await generateUniqueSlug(bodyData.Slug);
 
       var category = new Category
       {

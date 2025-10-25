@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace MyFirstApi.Models;
 
@@ -26,7 +27,7 @@ public class Post : BaseModel
 
     public required uint UserId { get; set; }
 
-    [ForeignKey(nameof(UserId))]
+    [ForeignKey(nameof(UserId)), JsonIgnore]
     public User Author { get; set; } = default!;
 
 

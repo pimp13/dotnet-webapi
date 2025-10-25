@@ -11,24 +11,49 @@ public class PostService
 {
   private readonly AppDbContext _context;
   private readonly FileUploderService _fileUploader;
+  private readonly ILogger<PostService> _logger;
+  private readonly IConfiguration _config;
 
-  public PostService(AppDbContext context, FileUploderService fileUploder)
+  public PostService(AppDbContext context, FileUploderService fileUploder, ILogger<PostService> logger, IConfiguration config)
   {
     _context = context;
     _fileUploader = fileUploder;
+    _logger = logger;
+    _config = config;
   }
 
-  public async Task<ApiResponse<List<Post>>> GetAll()
+  public async Task<ApiResponse<IEnumerable<PostResponseDto>>> GetAll(HttpRequest request)
   {
+    string domain = _config["AppSettings:BaseUrl"] ?? $"{request.Scheme}://{request.Host.Value}";
+
     var posts = await _context.Posts
-      .OrderByDescending(p => p.CreatedAt)
+      .AsNoTracking() // چون فقط خواندنی است، باعث بهبود عملکرد میشود
       .Include(p => p.Author)
       .Include(p => p.Category)
+        .ThenInclude(c => c.Children)
+      .OrderByDescending(p => p.CreatedAt)
+      .Select(p => new PostResponseDto
+      {
+        Id = p.Id,
+        Title = p.Title,
+        Slug = p.Slug,
+        ImageUrl = p.ImageUrl,
+        FullImageUrl = !string.IsNullOrEmpty(p.ImageUrl)
+            ? $"{domain}/{p.ImageUrl.TrimStart('/')}"
+            : null,
+        Content = p.Content,
+        Author = p.Author,
+        Category = p.Category,
+        Summary = p.Summary,
+        CreatedAt = p.CreatedAt,
+      })
       .ToListAsync();
 
-    return posts == null ?
-      ApiResponse<List<Post>>.Fail("posts not found") :
-      ApiResponse<List<Post>>.Success(posts);
+    if (posts == null || !posts.Any())
+      return ApiResponse<IEnumerable<PostResponseDto>>.Fail("posts not found");
+
+    return ApiResponse<IEnumerable<PostResponseDto>>.Success(posts);
+
   }
 
   public async Task<ApiResponse<Post>> Create(CreatePostDto bodyData, HttpRequest request)
@@ -71,6 +96,55 @@ public class PostService
     }
   }
 
+  public async Task<ApiResponse<Post>> Update(uint id, UpdatePostDto bodyData, HttpRequest request)
+  {
+    try
+    {
+      var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
+      if (post == null)
+        return ApiResponse<Post>.Fail("Post Not Found");
+
+      if (!string.IsNullOrWhiteSpace(bodyData.Title))
+      {
+        post.Title = bodyData.Title;
+        post.Slug = await generateUniqueSlug(bodyData.Slug ?? bodyData.Title);
+      }
+
+      if (!string.IsNullOrWhiteSpace(bodyData.Content))
+        post.Content = bodyData.Content;
+
+      if (!string.IsNullOrWhiteSpace(bodyData.Summary))
+        post.Summary = bodyData.Summary;
+
+      if (bodyData.CategoryId.HasValue)
+        post.CategoryId = bodyData.CategoryId.Value;
+
+      if (bodyData.UserId.HasValue)
+        post.UserId = bodyData.UserId.Value;
+
+
+      if (bodyData.Image != null)
+      {
+        _fileUploader.DeleteFileIfExists(post.ImageUrl);
+
+        (string imageRelativePath, string fullImageUrl) =
+           await _fileUploader.UploadAsync(bodyData.Image, "posts", request);
+        post.ImageUrl = imageRelativePath;
+        post.FullImageUrl = fullImageUrl;
+      }
+
+      _context.Posts.Update(post);
+      await _context.SaveChangesAsync();
+
+      return ApiResponse<Post>.Success(post);
+
+    }
+    catch (Exception e)
+    {
+      return ApiResponse<Post>.Fail($"Error in update pos: {e.Message}");
+    }
+  }
+
   private async Task<string> generateUniqueSlug(string input, uint? excludePostId = null)
   {
     if (string.IsNullOrWhiteSpace(input))
@@ -90,4 +164,20 @@ public class PostService
 
     return slug;
   }
+
+  // private void ApplyUpdate(this Post post, UpdatePostDto bodyData)
+  // {
+  //   if (!string.IsNullOrWhiteSpace(bodyData.Title))
+  //     post.Title = bodyData.Title;
+  //   if (!string.IsNullOrWhiteSpace(bodyData.Summary))
+  //     post.Title = bodyData.Summary;
+  //   if (!string.IsNullOrWhiteSpace(bodyData.Slug))
+  //     post.Title = bodyData.Slug;
+  //   if (!string.IsNullOrWhiteSpace(bodyData.Content))
+  //     post.Title = bodyData.Content;
+  //   if (bodyData.CategoryId.HasValue)
+  //     post.CategoryId = bodyData.CategoryId.Value;
+  //   if (bodyData.UserId.HasValue)
+  //     post.CategoryId = bodyData.UserId.Value;
+  // }
 }

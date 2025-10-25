@@ -33,6 +33,7 @@ public class User : BaseModel
     [Required]
     public bool IsSupperAdmin { get; set; } = false;
 
+    [JsonIgnore]
     public List<Post> Posts { get; set; } = new List<Post>();
 
     public string FullName()

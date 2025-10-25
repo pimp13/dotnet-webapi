@@ -22,6 +22,7 @@ public class UserService
 		var users = await _context.Users
 			.Include(u => u.Posts)
 			.ThenInclude(x => x.Category)
+			.ThenInclude(x => x.Children)
 			.Select(u => new UserResponseDto
 			{
 				Id = u.Id,

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using MyFirstApi.Models;
 
@@ -17,7 +18,20 @@ public class AppDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // User entity config
+        //* Soft Delete
+        // foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        // {
+        //     if (typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType))
+        //     {
+        //         var method = typeof(AppDbContext)
+        //         .GetMethod(nameof(SetSoftDeleteFilter), BindingFlags.NonPublic | BindingFlags.Static)
+        //         ?.MakeGenericMethod(entityType.ClrType);
+
+        //         method?.Invoke(null, new object[] { modelBuilder });
+        //     }
+        // }
+
+        //* User entity config
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasIndex(u => u.Email).IsUnique();
@@ -33,7 +47,7 @@ public class AppDbContext : DbContext
         });
 
 
-        // Category entity config
+        //* Category entity config
         modelBuilder.Entity<Category>(entity =>
         {
             entity.HasIndex(c => c.Slug).IsUnique(true);
@@ -52,7 +66,7 @@ public class AppDbContext : DbContext
         });
 
 
-        // Post entity config
+        //* Post entity config
         modelBuilder.Entity<Post>(entity =>
         {
             entity.HasIndex(p => p.Slug).IsUnique(true);
@@ -64,5 +78,11 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+    }
+
+    private static void SetSoftDeleteFilter<TEntity>(ModelBuilder builder)
+    where TEntity : class, ISoftDeletable
+    {
+        builder.Entity<TEntity>().HasQueryFilter(e => !e.IsDeleted);
     }
 }

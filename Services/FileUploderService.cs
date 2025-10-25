@@ -35,4 +35,35 @@ public class FileUploderService
 
     return (relativePath, fullUrl);
   }
+
+  public bool DeleteFileIfExists(string? relativePath)
+  {
+    if (string.IsNullOrWhiteSpace(relativePath))
+      return false;
+
+    try
+    {
+      var fullPath = Path.Combine(_env.WebRootPath, relativePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+      if (File.Exists(fullPath))
+      {
+        File.Delete(fullPath);
+        return true;
+      }
+    }
+    catch (Exception)
+    {
+      // می‌توان اینجا لاگ اضافه کرد در صورت نیاز
+    }
+
+    return false;
+  }
+
+  public bool FileExists(string? relativePath)
+  {
+    if (string.IsNullOrWhiteSpace(relativePath))
+      return false;
+
+    var fullPath = Path.Combine(_env.WebRootPath, relativePath.TrimStart('/').Replace('/', Path.DirectorySeparatorChar));
+    return File.Exists(fullPath);
+  }
 }

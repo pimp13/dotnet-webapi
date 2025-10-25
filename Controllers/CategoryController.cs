@@ -34,7 +34,7 @@ public class CategoryController : ControllerBase
   {
     var result = await _categoryService.Create(bodyData);
     return result.Ok ?
-      CreatedAtAction(nameof(FindById), result) :
+      CreatedAtAction(nameof(FindById), new { id = result?.Data?.Id }, result) :
       Problem(
         detail: result.Message,
         statusCode: StatusCodes.Status500InternalServerError,

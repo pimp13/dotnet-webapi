@@ -20,9 +20,9 @@ public class PostController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<ApiResponse<Post>>> GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var resp = await _postService.GetAll();
+        var resp = await _postService.GetAll(Request);
         return resp.Ok ?
             Ok(resp) :
             NotFound(resp);
@@ -34,6 +34,14 @@ public class PostController : ControllerBase
     {
         var result = await _postService.Create(bodyData, Request);
 
+        return result.Ok ? Ok(result) : BadRequest(result);
+    }
+
+    [Authorize(Policy = "ActiveUserOnly")]
+    [HttpPatch]
+    public async Task<IActionResult> Update(uint id, [FromForm] UpdatePostDto bodyData)
+    {
+        var result = await _postService.Update(id, bodyData, Request);
         return result.Ok ? Ok(result) : BadRequest(result);
     }
 }
