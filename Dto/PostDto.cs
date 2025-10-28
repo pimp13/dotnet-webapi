@@ -20,6 +20,8 @@ public class CreatePostDto
   public required uint CategoryId { get; set; }
 
   public required uint UserId { get; set; }
+
+  public List<string> Tags { get; set; } = new();
 }
 
 

@@ -84,6 +84,28 @@ public class PostService
         FullImageUrl = fullImageUrl,
       };
 
+      foreach (var tagName in bodyData.Tags)
+      {
+        var exitingTag = await _context.Tags
+          .FirstOrDefaultAsync(t => t.Name.ToLower() == tagName.ToLower());
+
+        if (exitingTag != null)
+        {
+          post.Tags.Add(exitingTag);
+        }
+        else
+        {
+          var newTag = new Tag
+          {
+            Name = tagName,
+            Slug = await generateUniqueSlugForTag(tagName),
+            IsActive = true,
+          };
+
+          post.Tags.Add(newTag);
+        }
+      }
+
       await _context.Posts.AddAsync(post);
       await _context.SaveChangesAsync();
 
@@ -157,6 +179,26 @@ public class PostService
     int suffix = 1;
 
     while (await _context.Posts.AnyAsync(p => p.Slug == slug && (excludePostId == null || p.Id != excludePostId)))
+    {
+      slug = $"{baseSlug}-{suffix}";
+      suffix++;
+    }
+
+    return slug;
+  }
+
+  private async Task<string> generateUniqueSlugForTag(string input, uint? excludePostId = null)
+  {
+    if (string.IsNullOrWhiteSpace(input))
+    {
+      input = "default";
+    }
+
+    string slug = Helper.Slugify(input);
+    string baseSlug = slug;
+    int suffix = 1;
+
+    while (await _context.Tags.AnyAsync(p => p.Slug == slug && (excludePostId == null || p.Id != excludePostId)))
     {
       slug = $"{baseSlug}-{suffix}";
       suffix++;

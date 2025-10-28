@@ -10,9 +10,11 @@ public class AppDbContext : DbContext
     {
     }
 
+    // Register models and generate db tables
     public DbSet<User> Users => Set<User>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<Post> Posts => Set<Post>();
+    public DbSet<Tag> Tags => Set<Tag>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -78,6 +80,12 @@ public class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.Cascade);
         });
 
+        modelBuilder.Entity<Tag>(entity =>
+        {
+            entity.HasIndex(t => new { t.Name, t.IsActive });
+            entity.HasIndex(t => t.Slug).IsUnique();
+            entity.Property(t => t.IsActive).HasDefaultValue(true);
+        });
     }
 
     private static void SetSoftDeleteFilter<TEntity>(ModelBuilder builder)

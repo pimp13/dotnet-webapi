@@ -80,6 +80,7 @@ builder.Services.AddScoped<CategoryService>();
 builder.Services.AddScoped<HomeService>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<FileUploderService>();
+builder.Services.AddScoped<TagService>();
 
 var issuer = builder.Configuration["Jwt:Issuer"];
 var key = builder.Configuration["Jwt:Key"];

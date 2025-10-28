@@ -33,4 +33,6 @@ public class Post : BaseModel
 
     [NotMapped]
     public string? FullImageUrl { get; set; }
+
+    public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 }
