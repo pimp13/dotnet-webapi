@@ -1,6 +1,22 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\19af9f81-5e3f-4580-b690-64b31b02785c.png",
+      "PackagePath": "staticwebassets\\uploads\\posts\\19af9f81-5e3f-4580-b690-64b31b02785c.png"
+    },
+    {
+      "Id": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\24dcab9f-7f31-4e84-9a70-0d4a5fccb51c.png",
+      "PackagePath": "staticwebassets\\uploads\\posts\\24dcab9f-7f31-4e84-9a70-0d4a5fccb51c.png"
+    },
+    {
+      "Id": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\56c71036-caf0-48e1-8e6a-5ce362260052.png",
+      "PackagePath": "staticwebassets\\uploads\\posts\\56c71036-caf0-48e1-8e6a-5ce362260052.png"
+    },
+    {
+      "Id": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\5c13326e-1720-4007-922e-98d8302cabef.png",
+      "PackagePath": "staticwebassets\\uploads\\posts\\5c13326e-1720-4007-922e-98d8302cabef.png"
+    },
+    {
       "Id": "C:\\Users\\mehdi\\Desktop\\puma\\c#-apps\\MyFirstApi\\wwwroot\\uploads\\posts\\914675a0-a358-49ba-9153-e4d0cea80dd3.png",
       "PackagePath": "staticwebassets\\uploads\\posts\\914675a0-a358-49ba-9153-e4d0cea80dd3.png"
     },

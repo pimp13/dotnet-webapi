@@ -1,9 +1,8 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyFirstApi.Dto;
 using MyFirstApi.Extensions;
-using MyFirstApi.Models;
 using MyFirstApi.Services;
 
 namespace MyFirstApi.Controllers;
@@ -13,10 +12,12 @@ namespace MyFirstApi.Controllers;
 public class PostController : ControllerBase
 {
     private readonly PostService _postService;
+    private readonly ILogger<PostService> _logger;
 
-    public PostController(PostService postService)
+    public PostController(PostService postService, ILogger<PostService> logger)
     {
         _postService = postService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -32,7 +33,13 @@ public class PostController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromForm] CreatePostDto bodyData)
     {
-        var result = await _postService.Create(bodyData, Request);
+        var strUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        _logger.LogInformation($"user id is loggin {strUserId}");
+        if (strUserId == null) return Unauthorized(ApiResponse<object>.Fail("You can't login!"));
+
+        uint userId = Convert.ToUInt32(strUserId);
+
+        var result = await _postService.Create(bodyData, Request, userId);
 
         return result.Ok ? Ok(result) : BadRequest(result);
     }

@@ -9,9 +9,18 @@ public class CreateTagDto
   public required string Name { get; set; }
 
   [MaxLength(190)]
-  public required string Slug { get; set; }
+  public string? Slug { get; set; } = null!;
 
   public bool IsActive { get; set; } = true;
+}
 
+public class UpdateTagDto
+{
+  [MaxLength(190)]
+  public string? Name { get; set; } = null!;
 
+  [MaxLength(190)]
+  public string? Slug { get; set; } = null!;
+
+  public bool? IsActive { get; set; } = null;
 }

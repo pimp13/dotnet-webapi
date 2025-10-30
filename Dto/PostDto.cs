@@ -19,8 +19,6 @@ public class CreatePostDto
 
   public required uint CategoryId { get; set; }
 
-  public required uint UserId { get; set; }
-
   public List<string> Tags { get; set; } = new();
 }
 
@@ -61,6 +59,8 @@ public class PostResponseDto
   public Category Category { get; set; } = default!;
 
   public User Author { get; set; } = default!;
+
+  public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 
   public string? FullImageUrl { get; set; }
 

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using MyFirstApi.Data;
 using MyFirstApi.Dto;
@@ -29,6 +28,7 @@ public class PostService
     var posts = await _context.Posts
       .AsNoTracking() // چون فقط خواندنی است، باعث بهبود عملکرد میشود
       .Include(p => p.Author)
+      .Include(p => p.Tags)
       .Include(p => p.Category)
         .ThenInclude(c => c.Children)
       .OrderByDescending(p => p.CreatedAt)
@@ -43,6 +43,7 @@ public class PostService
             : null,
         Content = p.Content,
         Author = p.Author,
+        Tags = p.Tags,
         Category = p.Category,
         Summary = p.Summary,
         CreatedAt = p.CreatedAt,
@@ -56,7 +57,7 @@ public class PostService
 
   }
 
-  public async Task<ApiResponse<Post>> Create(CreatePostDto bodyData, HttpRequest request)
+  public async Task<ApiResponse<PostResponseDto>> Create(CreatePostDto bodyData, HttpRequest request, uint userId)
   {
     try
     {
@@ -69,7 +70,8 @@ public class PostService
 
       if (bodyData.Image != null)
       {
-        (imageRelativePath, fullImageUrl) = await _fileUploader.UploadAsync(bodyData.Image, "posts", request);
+        (imageRelativePath, fullImageUrl) =
+          await _fileUploader.UploadAsync(bodyData.Image, "posts", request);
       }
 
       var post = new Post
@@ -78,7 +80,7 @@ public class PostService
         Content = bodyData.Content,
         Slug = slug,
         Title = bodyData.Title,
-        UserId = bodyData.UserId,
+        UserId = userId,
         ImageUrl = imageRelativePath,
         Summary = bodyData.Summary,
         FullImageUrl = fullImageUrl,
@@ -109,12 +111,22 @@ public class PostService
       await _context.Posts.AddAsync(post);
       await _context.SaveChangesAsync();
 
-      return ApiResponse<Post>.Success(post);
+      return ApiResponse<PostResponseDto>.Success(new PostResponseDto
+      {
+        Content = post.Content,
+        Slug = post.Slug,
+        Title = post.Title,
+        Id = post.Id,
+        ImageUrl = post.ImageUrl,
+        FullImageUrl = post.FullImageUrl,
+        Summary = post.Summary,
+        CreatedAt = post.CreatedAt,
+      }, "پست جدید با موفقیت ثبت شد");
 
     }
     catch (Exception e)
     {
-      return ApiResponse<Post>.Fail($"Error in create post: {e.Message}");
+      return ApiResponse<PostResponseDto>.Fail($"Error in create post: {e.Message}");
     }
   }
 
